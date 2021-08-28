@@ -7,26 +7,25 @@ using System.Linq;
 using System.IO;
 using System.Timers;
 using System;
-using DiscordRPC.Logging;
 using System.Net;
+using System.IO.Compression;
 
 namespace MonoGame_Test
 {
     public class Game1 : Game
     {
+        //Read config
+        public string[] config = File.ReadAllLines("config");
+
         //Specify client
         public DiscordRpcClient client;
 
         //Sprites from MGCB, will change some of these to read from skin
-        public FrameCounter _frameCounter = new FrameCounter();
-        public Texture2D menu;
-        public Texture2D loading;
-        public Texture2D hitred;
-        public Texture2D hitblue;
-        public Texture2D cursor;
-        public GraphicsDeviceManager _graphics;
-        public SpriteBatch _spriteBatch;
-        public SpriteFont _spriteFont;
+        FrameCounter _frameCounter = new FrameCounter();
+        Texture2D menu;
+        GraphicsDeviceManager _graphics;
+        SpriteBatch _spriteBatch;
+        SpriteFont _spriteFont;
 
         //Make update tick happen on fixed time not every frame
         public static Timer fixedupdate;
@@ -34,26 +33,23 @@ namespace MonoGame_Test
         //Default setting for fpscounter
         public bool fpscounter = false;
 
-        //Read config
-        public string[] config = File.ReadAllLines("config");
+        //Skin Items
+        private Texture2D cursorsprite;
+        private Texture2D hitsprite;
 
         public Game1()
         {
             FileCheck();
 
+            //Skin extract
+            if (!Directory.Exists("userdata/skins/active/" + config[17]))
+            {
+                ZipFile.ExtractToDirectory("userdata/skins/" + config[17] + ".zip", "userdata/skins/active");
+            }
             //Discord RPC
             string RPC_Token = "815220394201841685";
             client = new DiscordRpcClient(RPC_Token);
 
-            client.OnReady += (sender, e) =>
-            {
-                Console.WriteLine("Received Ready from user {0}", e.User.Username);
-            };
-
-            client.OnPresenceUpdate += (sender, e) =>
-            {
-                Console.WriteLine("Received Update! {0}", e.Presence);
-            };
 
             if (config[15] == "true")
             {
@@ -74,11 +70,9 @@ namespace MonoGame_Test
             //Window Settings stuff
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = false;
             Window.Title = "Tappu: Made by Juan";
             Window.AllowAltF4 = false;
-
-            //Mouse Cursor
 
             //FPS Cap, idk how this works and it doesnt work well a lot but oh well
             if (config[11] == "true")
@@ -120,9 +114,18 @@ namespace MonoGame_Test
                 _graphics.PreferredBackBufferWidth = width;
                 _graphics.PreferredBackBufferHeight = height;
             }
-            
+
             //Apply all changes specified
             _graphics.ApplyChanges();
+
+            
+        }
+
+        protected override void OnExiting(Object sender, EventArgs args)
+        {
+            base.OnExiting(sender, args);
+
+            client.Dispose();
         }
 
         private void FileCheck()
@@ -152,7 +155,7 @@ namespace MonoGame_Test
             if (!File.Exists("userdata/skins/default.zip"))
             {
                 WebClient myWebClient = new WebClient();
-                myWebClient.DownloadFile("", "userdata/skins/default.zip");
+                myWebClient.DownloadFile("https://github.com/juaneth/Tappu-MonoGame/raw/master/skins/default.zip", "userdata/skins/default.zip");
             }
         }
 
@@ -163,13 +166,10 @@ namespace MonoGame_Test
             // TODO: use this.Content to load your game content here
 
             menu = Content.Load<Texture2D>("menu");
-            loading = Content.Load<Texture2D>("loading");
-            hitred = Content.Load<Texture2D>("hit-red");
-            hitblue = Content.Load<Texture2D>("hit-blue");
             _spriteFont = Content.Load<SpriteFont>("Arial");
 
-            FileStream fileStream = new FileStream("userdata/skins/" + config[17], FileMode.Open);
-            Texture2D spriteAtlas = Texture2D.FromStream(GraphicsDevice, fileStream);
+            FileStream fileStream = new FileStream("userdata/skins/active/default/textures/cursor.png", FileMode.Open);
+            cursorsprite = Texture2D.FromStream(GraphicsDevice, fileStream);
             fileStream.Dispose();
         }
 
@@ -240,13 +240,18 @@ namespace MonoGame_Test
 
             var fps = string.Format("FPS: {0}", _frameCounter.AverageFramesPerSecond);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied);
 
             _spriteBatch.Draw(menu, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), Color.White);
 
+            MouseState currentMouseState = Mouse.GetState();
+            Vector2 pos = new Vector2(currentMouseState.X - 45, currentMouseState.Y - 45);
+
+            _spriteBatch.Draw(cursorsprite, pos, Color.White);
+
             if (fpscounter == true)
             {
-                _spriteBatch.DrawString(_spriteFont, fps, new Vector2(1, 1), Color.White);
+                _spriteBatch.DrawString(_spriteFont, fps, new Vector2(34, 34), Color.Black);
             }
 
             _spriteBatch.End();
@@ -254,13 +259,7 @@ namespace MonoGame_Test
 
         protected void OpenSongSelector()
         {
-            // TODO: Add your drawing code here
 
-            _spriteBatch.Begin();
-
-            _spriteBatch.Draw(menu, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), Color.White);
-
-            _spriteBatch.End();
         }
     }
 
