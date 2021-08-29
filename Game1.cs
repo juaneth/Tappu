@@ -25,7 +25,7 @@ namespace MonoGame_Test
         Texture2D menu;
         GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
-        SpriteFont _spriteFont;
+        SpriteFont _defaultfont;
 
         //Make update tick happen on fixed time not every frame
         public static Timer fixedupdate;
@@ -166,7 +166,7 @@ namespace MonoGame_Test
             // TODO: use this.Content to load your game content here
 
             menu = Content.Load<Texture2D>("menu");
-            _spriteFont = Content.Load<SpriteFont>("Arial");
+            _defaultfont = Content.Load<SpriteFont>("font");
 
             FileStream fileStream = new FileStream("userdata/skins/active/default/textures/cursor.png", FileMode.Open);
             cursorsprite = Texture2D.FromStream(GraphicsDevice, fileStream);
@@ -238,7 +238,9 @@ namespace MonoGame_Test
 
             _frameCounter.Update(deltaTime);
 
-            var fps = string.Format("FPS: {0}", _frameCounter.AverageFramesPerSecond);
+            int rounded = Convert.ToInt32(_frameCounter.AverageFramesPerSecond);
+
+            var fps = string.Format("FPS: {0}", rounded);
 
             _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied);
 
@@ -247,12 +249,12 @@ namespace MonoGame_Test
             MouseState currentMouseState = Mouse.GetState();
             Vector2 pos = new Vector2(currentMouseState.X - 45, currentMouseState.Y - 45);
 
-            _spriteBatch.Draw(cursorsprite, pos, Color.White);
-
             if (fpscounter == true)
             {
-                _spriteBatch.DrawString(_spriteFont, fps, new Vector2(34, 34), Color.Black);
+                _spriteBatch.DrawString(_defaultfont, fps, new Vector2(34, 34), Color.Black);
             }
+
+            _spriteBatch.Draw(cursorsprite, pos, Color.White);
 
             _spriteBatch.End();
         }
@@ -274,7 +276,7 @@ namespace MonoGame_Test
         public float AverageFramesPerSecond { get; private set; }
         public float CurrentFramesPerSecond { get; private set; }
 
-        public const int MAXIMUM_SAMPLES = 100;
+        public const int MAXIMUM_SAMPLES = 10000;
 
         private Queue<float> _sampleBuffer = new Queue<float>();
 

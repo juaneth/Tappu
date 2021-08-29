@@ -25,12 +25,12 @@
 /processorParam:TextureFormat=Color
 /build:../../../../Downloads/menu.jpg;menu.jpg
 
-#begin File.spritefont
+#begin font.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:File.spritefont;defaultFont.spritefont
+/build:font.spritefont
 
 #begin menu.jpg
 /importer:TextureImporter
