@@ -17,6 +17,7 @@
     <PackageReference Include="Auth0.OidcClient.WinForms" Version="3.2.3" />
     <PackageReference Include="DiscordRichPresence" Version="1.0.175" />
     <PackageReference Include="IdentityModel.OidcClient" Version="4.0.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.902.49" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.UI.Forms" Version="1.0.1" />

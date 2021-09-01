@@ -13,6 +13,14 @@ using Newtonsoft.Json;
 
 namespace MonoGame_Test
 {
+    public enum DisplayLayer
+    {
+        Background, //back-layer
+        Particles,
+        Player,
+        MenuBack,
+        MenuFront //front-layer
+    }
 
     public class Game1 : Game
     {
@@ -238,6 +246,7 @@ namespace MonoGame_Test
 
         protected override void Draw(GameTime gameTime)
         {
+            
             //Update every frame stuff
             base.Draw(gameTime);
             var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -248,7 +257,7 @@ namespace MonoGame_Test
             var fps = string.Format("FPS: {0}", rounded);
 
             //Begin Draw
-            _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied);
+            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
 
             //Draw background
             _spriteBatch.Draw(menu, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), Color.White);

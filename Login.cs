@@ -22,7 +22,7 @@ namespace Tappu
                 Domain = "tappu.eu.auth0.com",
                 ClientId = "syGa7Bhq7oQu1VVFOedYzClqm5nQZr0e",
                 RedirectUri = "https://tappu.eu.auth0.com/mobile",
-                
+                Browser = new WebViewBrowserChromium()
             };
             client = new Auth0Client(clientOptions);
             clientOptions.PostLogoutRedirectUri = clientOptions.RedirectUri;

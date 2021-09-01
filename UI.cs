@@ -8,11 +8,12 @@ namespace MonoGame_Test
     {
         public UI(Game game) : base(game)
         {
-            
+            this.DrawOrder = (int)DisplayLayer.MenuBack;
         }
 
         public override void InitializeComponent()
         {
+
             string[] config = System.IO.File.ReadAllLines("config");
             var ss = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
 
@@ -48,7 +49,8 @@ namespace MonoGame_Test
                     BackgroundColor = Color.Gray,
                     Enabled = true,
                     IsVisible = true,
-                    FontName = "Arial"
+                    FontName = "Arial",
+                    
                 };
 
                 start.Clicked += Start_Clicked;
