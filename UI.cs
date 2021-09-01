@@ -59,7 +59,7 @@ namespace MonoGame_Test
 
         public void Start_Clicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

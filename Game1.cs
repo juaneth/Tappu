@@ -9,16 +9,18 @@ using System.Timers;
 using System;
 using System.Net;
 using System.IO.Compression;
+using Newtonsoft.Json;
 
 namespace MonoGame_Test
 {
+
     public class Game1 : Game
     {
         //Read config
         public string[] config = File.ReadAllLines("config");
 
         //Specify client
-        public DiscordRpcClient client;
+        public DiscordRpcClient rpc;
 
         //Sprites from MGCB, will change some of these to read from skin
         FrameCounter _frameCounter = new FrameCounter();
@@ -48,15 +50,15 @@ namespace MonoGame_Test
             }
             //Discord RPC
             string RPC_Token = "815220394201841685";
-            client = new DiscordRpcClient(RPC_Token);
+            rpc = new DiscordRpcClient(RPC_Token);
 
 
             if (config[15] == "true")
             {
-                client.Initialize();
+                rpc.Initialize();
             }
 
-            client.SetPresence(new RichPresence()
+            rpc.SetPresence(new RichPresence()
             {
                 Details = "Made by Juan!",
                 State = "In Menu",
@@ -117,15 +119,12 @@ namespace MonoGame_Test
 
             //Apply all changes specified
             _graphics.ApplyChanges();
-
-            
         }
 
         protected override void OnExiting(Object sender, EventArgs args)
         {
             base.OnExiting(sender, args);
-
-            client.Dispose();
+            rpc.Dispose();
         }
 
         private void FileCheck()
@@ -165,21 +164,30 @@ namespace MonoGame_Test
 
             // TODO: use this.Content to load your game content here
 
+            //Static textures
             menu = Content.Load<Texture2D>("menu");
             _defaultfont = Content.Load<SpriteFont>("font");
 
-            FileStream fileStream = new FileStream("userdata/skins/active/default/textures/cursor.png", FileMode.Open);
-            cursorsprite = Texture2D.FromStream(GraphicsDevice, fileStream);
-            fileStream.Dispose();
+            //Skinned textures
+
+            //Cursor
+            FileStream cursorload = new FileStream("userdata/skins/active/default/textures/cursor.png", FileMode.Open);
+            cursorsprite = Texture2D.FromStream(GraphicsDevice, cursorload);
+            cursorload.Dispose();
+
+            //Hit
+            FileStream hitload = new FileStream("userdata/skins/active/default/textures/hit.png", FileMode.Open);
+            hitsprite = Texture2D.FromStream(GraphicsDevice, hitload);
+            hitload.Dispose();
         }
 
         protected override void Initialize()
         {
-            //Add UI Components, may port to winforms for beta
-            this.Components.Add(new UI(this));
+            Tappu.Login f2 = new Tappu.Login();
+            f2.Show();
 
             base.Initialize();
-
+                
             //Set update fixed timer
             fixedupdate = new Timer(); fixedupdate.Interval = 4.16666666667 /* 240HZ in ms */; fixedupdate.Elapsed += UpdateFixed; fixedupdate.Enabled = true;
 
@@ -230,38 +238,40 @@ namespace MonoGame_Test
 
         protected override void Draw(GameTime gameTime)
         {
-            // TODO: Add your drawing code here
-
+            //Update every frame stuff
             base.Draw(gameTime);
-
             var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
             _frameCounter.Update(deltaTime);
 
+            //Round FPS counter average and set to variable
             int rounded = Convert.ToInt32(_frameCounter.AverageFramesPerSecond);
-
             var fps = string.Format("FPS: {0}", rounded);
 
+            //Begin Draw
             _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied);
 
+            //Draw background
             _spriteBatch.Draw(menu, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), Color.White);
 
-            MouseState currentMouseState = Mouse.GetState();
-            Vector2 pos = new Vector2(currentMouseState.X - 45, currentMouseState.Y - 45);
-
+            //If fps counter is on, draw it
             if (fpscounter == true)
             {
                 _spriteBatch.DrawString(_defaultfont, fps, new Vector2(34, 34), Color.Black);
             }
 
+            //Test hit
+            _spriteBatch.Draw(hitsprite, new Vector2(600 + 6, 600 + 6), Color.Black * 0.6f);
+            _spriteBatch.Draw(hitsprite, new Vector2(600, 600), Color.White);
+
+            //Get cursor position
+            MouseState currentMouseState = Mouse.GetState();
+            Vector2 pos = new Vector2(currentMouseState.X - 45, currentMouseState.Y - 45);
+
+            //Draw cursor at cursor position
             _spriteBatch.Draw(cursorsprite, pos, Color.White);
 
+            //End Draw
             _spriteBatch.End();
-        }
-
-        protected void OpenSongSelector()
-        {
-
         }
     }
 

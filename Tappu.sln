@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tappu", "Tappu.csproj", "{A37F9C5E-A5A7-4358-BC7D-68BDB39B302C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TappuAssetBuilder (TAB)", "..\TappuAssetBuilder (TAB)\TappuAssetBuilder (TAB).csproj", "{B6D79327-B774-4F9D-92A9-4075BD525A2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TappuAssetBuilder (TAB)", "..\TappuAssetBuilder (TAB)\TappuAssetBuilder (TAB).csproj", "{B6D79327-B774-4F9D-92A9-4075BD525A2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

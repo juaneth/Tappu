@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CS1705: Assembly 'Auth0.OidcClient.Core' with identity 'Auth0.OidcClient.Core, Version=3.2.2.0, Culture=neutral, PublicKeyToken=ec660178b73224a7' uses 'IdentityModel.OidcClient, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5580d04c1b6c37c1' which has a higher version than referenced assembly 'IdentityModel.OidcClient' with identity 'IdentityModel.OidcClient, Version=3.0.0.0, Culture=neutral, PublicKeyToken=5580d04c1b6c37c1'
+dotnet_diagnostic.CS1705.severity = none
