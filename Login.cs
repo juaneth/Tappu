@@ -35,10 +35,12 @@ namespace Tappu
             }
             this.Close();
 
+            var sss = loginResult.AuthenticationTime;
+
             bool signed = loginResult.User.Identity.IsAuthenticated;
             if (signed == true)
             {
-                MessageBox.Show("Logged in succesfully!");
+                MessageBox.Show("Logged in succesfully in " + sss + "!");
             }
         }
     }
