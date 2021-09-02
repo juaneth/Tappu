@@ -33,7 +33,6 @@ namespace Tappu
             {
                 MessageBox.Show("There has been an error, please try again later \nsmart people code: " + loginResult.ErrorDescription);
             }
-            this.Close();
 
             var sss = loginResult.AuthenticationTime;
 
@@ -42,6 +41,8 @@ namespace Tappu
             {
                 MessageBox.Show("Logged in succesfully in " + sss + "!");
             }
+
+            this.Close();
         }
     }
 }

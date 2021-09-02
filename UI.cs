@@ -8,7 +8,7 @@ namespace MonoGame_Test
     {
         public UI(Game game) : base(game)
         {
-            this.DrawOrder = (int)DisplayLayer.MenuBack;
+
         }
 
         public override void InitializeComponent()

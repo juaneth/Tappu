@@ -13,15 +13,6 @@ using Newtonsoft.Json;
 
 namespace MonoGame_Test
 {
-    public enum DisplayLayer
-    {
-        Background, //back-layer
-        Particles,
-        Player,
-        MenuBack,
-        MenuFront //front-layer
-    }
-
     public class Game1 : Game
     {
         //Read config
