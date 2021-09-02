@@ -10,6 +10,8 @@ using System;
 using System.Net;
 using System.IO.Compression;
 using Auth0.OidcClient;
+using RestSharp;
+using System.Security.Claims;
 
 namespace MonoGame_Test
 {
@@ -197,9 +199,9 @@ namespace MonoGame_Test
             base.Initialize();
 
             var loginResult = await client.LoginAsync();
+            var result = loginResult.User.Identity.IsAuthenticated + "\n" + loginResult.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
-            var sss = loginResult.AuthenticationTime;
-            bool signed = loginResult.User.Identity.IsAuthenticated;
+            File.WriteAllText("userdata/tmpuser", result);
 
             //Set update fixed timer
             fixedupdate = new Timer(); fixedupdate.Interval = 4.16666666667 /* 240HZ in ms */; fixedupdate.Elapsed += UpdateFixed; fixedupdate.Enabled = true;
@@ -230,7 +232,8 @@ namespace MonoGame_Test
 
             if (Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
-                
+                System.Windows.Forms.MessageBox.Show("PFP Changing");
+                changepfp("sss");
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt))
@@ -286,6 +289,16 @@ namespace MonoGame_Test
 
             //End Draw
             _spriteBatch.End();
+        }
+
+        private static void changepfp(string userid)
+        {
+            var client = new RestClient("https://tappu.eu.auth0.com/api/v2/users/" + userid);
+            var request = new RestRequest(Method.PATCH);
+            request.AddHeader("authorization", "Bearer ABCD");
+            request.AddHeader("content-type", "application/json");
+            request.AddParameter("application/json", "{\"user_metadata\": {\"picture\": \"file://C:/Users/euanw/Downloads/smeg.png\"}}", ParameterType.RequestBody);
+            IRestResponse response = client.Execute(request);
         }
     }
 
