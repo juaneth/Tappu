@@ -9,7 +9,7 @@ using System.Timers;
 using System;
 using System.Net;
 using System.IO.Compression;
-using Newtonsoft.Json;
+using Auth0.OidcClient;
 
 namespace MonoGame_Test
 {
@@ -180,13 +180,27 @@ namespace MonoGame_Test
             hitload.Dispose();
         }
 
-        protected override void Initialize()
+        protected async override void Initialize()
         {
-            Tappu.Login f2 = new Tappu.Login();
-            f2.Show();
+            Auth0Client client;
+
+            Auth0ClientOptions clientOptions = new Auth0ClientOptions
+            {
+                Domain = "tappu.eu.auth0.com",
+                ClientId = "syGa7Bhq7oQu1VVFOedYzClqm5nQZr0e",
+                RedirectUri = "https://tappu.eu.auth0.com/mobile",
+                Browser = new Tappu.WebViewBrowserChromium()
+            };
+            client = new Auth0Client(clientOptions);
+            clientOptions.PostLogoutRedirectUri = clientOptions.RedirectUri;
 
             base.Initialize();
-                
+
+            var loginResult = await client.LoginAsync();
+
+            var sss = loginResult.AuthenticationTime;
+            bool signed = loginResult.User.Identity.IsAuthenticated;
+
             //Set update fixed timer
             fixedupdate = new Timer(); fixedupdate.Interval = 4.16666666667 /* 240HZ in ms */; fixedupdate.Elapsed += UpdateFixed; fixedupdate.Enabled = true;
 
