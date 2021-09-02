@@ -13,7 +13,7 @@ namespace Tappu
 
         private async void Login_Load(object sender, EventArgs e)
         {
-            this.Visible = true;
+            this.Visible = false;
 
             Auth0Client client;
 
@@ -34,6 +34,12 @@ namespace Tappu
                 MessageBox.Show("There has been an error, please try again later \nsmart people code: " + loginResult.ErrorDescription);
             }
             this.Close();
+
+            bool signed = loginResult.User.Identity.IsAuthenticated;
+            if (signed == true)
+            {
+                MessageBox.Show("Logged in succesfully!");
+            }
         }
     }
 }
